@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-br" dir="ltr" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="author" content="castelhano.rafael@gmail.com">
+    <title>jsDP</title>
+
+    <link rel="stylesheet" href="./static/css/vendor/bootstrap.min.css">
+    <link rel="stylesheet" href="./static/css/vendor/all.min.css">
+    <link rel="stylesheet" href="./static/css/dot.css">
+
+<style>
+    .theme-switch__input,.theme-switch__label {position: relative;cursor: pointer;}
+    .theme-switch__input {opacity: 0;}
+    .theme-switch__input:hover + .theme-switch__label, .theme-switch__input:focus + .theme-switch__label {background-color: lightSlateGray;}
+    .theme-switch__input:hover + .theme-switch__label span::after, .theme-switch__input:focus + .theme-switch__label span::after {background-color: #d4ebf2;}
+    .theme-switch__label {transition: background-color 200ms ease-in-out;width: 50px;height: 25px;border-radius: 50px;text-align: center;background-color: slateGray;box-shadow: -4px 4px 15px inset rgba(0, 0, 0, 0.4);}
+    .theme-switch__label::before, .theme-switch__label::after {font-size: 1.8rem;position: absolute;transform: translate3d(0, -50%, 0);top: 50%;}
+    .theme-switch__label::before {content: "☼"; right: 100%;margin-right: 5px;color: orange;}
+    .theme-switch__label::after{content: "☾"; left: 100%; margin-left: 5px; color: lightSlateGray;}
+    .theme-switch__label span::after{position: absolute; top: 5px;left: 5px;width: 15px;height: 15px;content: "";border-radius: 50%;background-color: lightBlue;transition: transform 200ms, background-color 200ms;box-shadow: -3px 3px 8px rgba(0, 0, 0, 0.4); }
+    .theme-switch__input:checked ~ .theme-switch__label{background-color: lightSlateGray;}
+    .theme-switch__input:checked ~ .theme-switch__label::before {color: lightSlateGray;}
+    .theme-switch__input:checked ~ .theme-switch__label::after {color: turquoise;}
+    .theme-switch__input:checked ~ .theme-switch__label span::after {transform: translate3d(26px, 0, 0);}
+</style>
+
+</head>
+<body>
+    <div class="container-fluid p-3">
+        <div class="row">
+            <div class="col">
+                <h3 class="m-0">Controle de Afastamentos</h3>
+                <small class="ps-1">Version: 1.0</small>
+            </div>
+            <div class="col-auto pe-5">
+                <input type="checkbox" id="themeSwitch" name="theme-switch" class="theme-switch__input"> <label for="themeSwitch" class="theme-switch__label"><span></span></label>
+            </div>
+        </div>
+        <div class="card mt-3">
+            <div class="card-header">
+                <ul class="nav nav-tabs card-header-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active disabled" href="#"><i class="fas fa-calendar-check text-purple"></i></a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="menu_cadastro" data-bs-toggle="dropdown" href="#" role="button"><b>C</b>adastro</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="./empresa.html"><b>E</b>mpresa</a></li>
+                            <li><a class="dropdown-item" href="./400.html"><b>F</b>uncionário</a></li>
+                            <li><a class="dropdown-item" href="#"><b>S</b>etor</a></li>
+                            <li><a class="dropdown-item" href="#"><b>C</b>argo</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item dropdown-item-purple" href="#">Se<b>t</b>tings</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Special title treatment</h5>
+                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                <a href="./empresa.html" class="btn btn-primary">Go somewhere</a>
+            </div>
+        </div>
+    </div>
+
+<script src="./static/js/vendor/bootstrap.bundle.min.js"></script>
+<script src="./static/js/dot.js"></script>
+<script src="./static/js/url.js"></script>
+<script src="./static/js/listener.js"></script>
+<script>
+if(localStorage.theme){document.getElementById('themeSwitch').checked = localStorage.theme == 'dark';}
+document.getElementById('themeSwitch').onclick = (e)=>{if(e.target.checked){document.documentElement.dataset.bsTheme = 'dark';localStorage.theme = 'dark' }else{document.documentElement.dataset.bsTheme = 'light';localStorage.theme = 'light'}};
+SHORTCUT_MAP['cTFF'] = () => {document.getElementById('menu_cadastro').click()};
+
+// Atalhos do submenu
+
+    
+
+</script>
+</body>
+</html>
