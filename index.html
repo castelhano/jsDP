@@ -6,30 +6,49 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="author" content="castelhano.rafael@gmail.com">
     <title>jsDP</title>
-
+    
     <link rel="stylesheet" href="./static/css/vendor/bootstrap.min.css">
     <link rel="stylesheet" href="./static/css/vendor/all.min.css">
     <link rel="stylesheet" href="./static/css/dot.css">
-
-<style>
-    .theme-switch__input,.theme-switch__label {position: relative;cursor: pointer;}
-    .theme-switch__input {opacity: 0;}
-    .theme-switch__input:hover + .theme-switch__label, .theme-switch__input:focus + .theme-switch__label {background-color: lightSlateGray;}
-    .theme-switch__input:hover + .theme-switch__label span::after, .theme-switch__input:focus + .theme-switch__label span::after {background-color: #d4ebf2;}
-    .theme-switch__label {transition: background-color 200ms ease-in-out;width: 50px;height: 25px;border-radius: 50px;text-align: center;background-color: slateGray;box-shadow: -4px 4px 15px inset rgba(0, 0, 0, 0.4);}
-    .theme-switch__label::before, .theme-switch__label::after {font-size: 1.8rem;position: absolute;transform: translate3d(0, -50%, 0);top: 50%;}
-    .theme-switch__label::before {content: "☼"; right: 100%;margin-right: 5px;color: orange;}
-    .theme-switch__label::after{content: "☾"; left: 100%; margin-left: 5px; color: lightSlateGray;}
-    .theme-switch__label span::after{position: absolute; top: 5px;left: 5px;width: 15px;height: 15px;content: "";border-radius: 50%;background-color: lightBlue;transition: transform 200ms, background-color 200ms;box-shadow: -3px 3px 8px rgba(0, 0, 0, 0.4); }
-    .theme-switch__input:checked ~ .theme-switch__label{background-color: lightSlateGray;}
-    .theme-switch__input:checked ~ .theme-switch__label::before {color: lightSlateGray;}
-    .theme-switch__input:checked ~ .theme-switch__label::after {color: turquoise;}
-    .theme-switch__input:checked ~ .theme-switch__label span::after {transform: translate3d(26px, 0, 0);}
-</style>
-
+    
+    <style>
+    .bug_icon{
+        display: inline-block;
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        border-radius: 50px;
+        background-color: #dc3545;
+        color: #FFF;
+        font-size: 1.5rem;
+        padding: 8px 15px;
+    }
+        .theme-switch__input,.theme-switch__label {position: relative;cursor: pointer;}
+        .theme-switch__input {opacity: 0;}
+        .theme-switch__input:hover + .theme-switch__label, .theme-switch__input:focus + .theme-switch__label {background-color: lightSlateGray;}
+        .theme-switch__input:hover + .theme-switch__label span::after, .theme-switch__input:focus + .theme-switch__label span::after {background-color: #d4ebf2;}
+        .theme-switch__label {transition: background-color 200ms ease-in-out;width: 50px;height: 25px;border-radius: 50px;text-align: center;background-color: slateGray;box-shadow: -4px 4px 15px inset rgba(0, 0, 0, 0.4);}
+        .theme-switch__label::before, .theme-switch__label::after {font-size: 1.8rem;position: absolute;transform: translate3d(0, -50%, 0);top: 50%;}
+        .theme-switch__label::before {content: "☼"; right: 100%;margin-right: 5px;color: orange;}
+        .theme-switch__label::after{content: "☾"; left: 100%; margin-left: 5px; color: lightSlateGray;}
+        .theme-switch__label span::after{position: absolute; top: 5px;left: 5px;width: 15px;height: 15px;content: "";border-radius: 50%;background-color: lightBlue;transition: transform 200ms, background-color 200ms;box-shadow: -3px 3px 8px rgba(0, 0, 0, 0.4); }
+        .theme-switch__input:checked ~ .theme-switch__label{background-color: lightSlateGray;}
+        .theme-switch__input:checked ~ .theme-switch__label::before {color: lightSlateGray;}
+        .theme-switch__input:checked ~ .theme-switch__label::after {color: turquoise;}
+        .theme-switch__input:checked ~ .theme-switch__label span::after {transform: translate3d(26px, 0, 0);}
+        .btn-wd{width: 40px;}
+    </style>
+    
 </head>
 <body>
+    <a id="clear" href="./index.html" class="d-none"></a>
+    <div class="container-fluid position-fixed">
+        <div class="row">
+            <div id="notify_container" class="col-lg-auto mx-auto pt-1"></div>
+        </div>
+    </div>
     <div class="container-fluid p-3">
+        
         <div class="row">
             <div class="col">
                 <h3 class="m-0">Controle de Afastamentos</h3>
@@ -47,40 +66,54 @@
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" id="menu_cadastro" data-bs-toggle="dropdown" href="#" role="button"><b>C</b>adastro</a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="./empresa.html"><b>E</b>mpresa</a></li>
-                            <li><a class="dropdown-item" href="./400.html"><b>F</b>uncionário</a></li>
-                            <li><a class="dropdown-item" href="#"><b>S</b>etor</a></li>
+                        <ul id="menu_cadastro_list" class="dropdown-menu">
+                            <li><button id="cadastro_empresa" class="dropdown-item" type="button" onclick="guiEmpresas()"><b>E</b>mpresa</button></li>
+                            <li><a class="dropdown-item" href="#"><b>F</b>uncionário</a></li>
                             <li><a class="dropdown-item" href="#"><b>C</b>argo</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item dropdown-item-purple" href="#">Se<b>t</b>tings</a></li>
                         </ul>
                     </li>
+                    <li class="ms-auto">
+                        <button id="back" type="button" class="btn btn-sm btn-secondary btn-wd d-none" title="Voltar [Alt N]"><i class="fas fa-undo"></i></button>
+                        <button id="submit" type="button" class="btn btn-sm btn-primary d-none" title="Gravar [Alt N]"><b>G</b>ravar</button>
+                        <button id="add" type="button" class="btn btn-sm btn-success btn-wd d-none" title="Novo [Alt N]"><i class="fas fa-plus"></i></button>
+                        <button id="save" type="button" class="btn btn-sm btn-dark btn-wd" onclick="modelDownload()" title="Salvar [Alt D]"><i class="fas fa-download"></i></button>
+                    </li>
                 </ul>
             </div>
-            <div class="card-body">
-                <h5 class="card-title">Special title treatment</h5>
-                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                <a href="./empresa.html" class="btn btn-primary">Go somewhere</a>
+            <div class="card-body" id="main_container">
+                <small>Em desenvolvimento..</small>
             </div>
         </div>
     </div>
-
-<script src="./static/js/vendor/bootstrap.bundle.min.js"></script>
-<script src="./static/js/dot.js"></script>
-<script src="./static/js/url.js"></script>
-<script src="./static/js/listener.js"></script>
-<script src="./empresa.js"></script>
-<script src="./app.js"></script>
-<script>
-if(localStorage.theme){document.getElementById('themeSwitch').checked = localStorage.theme == 'dark';}
-document.getElementById('themeSwitch').onclick = (e)=>{if(e.target.checked){document.documentElement.dataset.bsTheme = 'dark';localStorage.theme = 'dark' }else{document.documentElement.dataset.bsTheme = 'light';localStorage.theme = 'light'}};
-SHORTCUT_MAP['cTFF'] = () => {document.getElementById('menu_cadastro').click()};
-
-// Atalhos do submenu
-
     
-
-</script>
+    <script src="./static/js/vendor/bootstrap.bundle.min.js"></script>
+    <script src="./static/js/vendor/mask.js"></script>
+    <script src="./static/js/dot.js"></script>
+    <script src="./static/js/table.js"></script>
+    <script src="./static/js/listener.js"></script>
+    <script src="./cargo.js"></script>
+    <script src="./empresa.js"></script>
+    <script src="./gui.js"></script>
+    <script src="./app.js"></script>
+    <script>
+        var TAB_ON_ENTER = true;
+        if(localStorage.theme){document.getElementById('themeSwitch').checked = localStorage.theme == 'dark';}
+        document.getElementById('themeSwitch').onclick = (e)=>{if(e.target.checked){document.documentElement.dataset.bsTheme = 'dark';localStorage.theme = 'dark' }else{document.documentElement.dataset.bsTheme = 'light';localStorage.theme = 'light'}};
+        
+        SHORTCUT_MAP['fFTF'] = () => {try{main_table.filterInput.select()}catch(e){}};
+        SHORTCUT_MAP['arrowrightFTF'] = () => {try{main_table.nextPage()}catch(e){}};
+        SHORTCUT_MAP['arrowleftFTF'] = () => {try{main_table.previousPage()}catch(e){}};
+        SHORTCUT_MAP['arrowdownFTF'] = () => {try{main_table.nextRow()}catch(e){}};
+        SHORTCUT_MAP['arrowupFTF'] = () => {try{main_table.previousRow()}catch(e){}};
+        SHORTCUT_MAP['enterFTF'] = () => {try{main_table.enterRow()}catch(e){}};
+        
+        SHORTCUT_MAP['cTFF'] = () => {document.getElementById('menu_cadastro').click()};
+        SHORTCUT_MAP['eFFF'] = () => {if(menuCadastroVisible()){try{document.getElementById('cadastro_empresa').click();}catch (e){}}}
+        
+        function menuCadastroVisible(){return document.getElementById('menu_cadastro_list').classList.contains('show') ? true : false;}
+        
+    </script>
 </body>
 </html>

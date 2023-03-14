@@ -3,9 +3,7 @@ class Empresa{
         this.id = this.nextId();
         this.nome = options?.nome || 'Nova empresa';
         this.razaoSocial = options?.razaoSocial || '';
-        console.log(this);
+        this.cnpj = options?.cnpj || '';
     }
-    nextId(){
-        return 1;
-    }
+    nextId(){return model.index.empresa++;}
 }
