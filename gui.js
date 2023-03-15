@@ -6,8 +6,9 @@ const modalDelete_btn = document.getElementById('modal_delete_btn');
 const modalDelete = new bootstrap.Modal(document.getElementById('delete_modal'), {keyboard: false});
 const delete_btn = document.getElementById('delete');
 const model_label = document.getElementById('model_label');
-const empresa_form = '<form action="#"><input type="hidden" name="id" id="id_id"><div class="row g-1"><div class="form-floating mb-1 col-lg-4"><input type="text" id="id_nome" name="nome" class="form-control" placeholder=" "><label for="id_nome">Nome Empresa</label></div><div class="form-floating mb-1 col-lg-4"><input type="text" id="id_cnpj" name="cnpj" class="form-control" placeholder=" "><label for="id_cnpj">CNPJ</label></div></div><div class="row g-1"><div class="form-floating mb-1 col-lg-8"><input type="text" id="id_razaoSocial" name="razaoSocial" class="form-control" placeholder=" "><label for="id_razaoSocial">Razão Social</label></div></div></form>';    
-const cargo_form = '<form action="#"><input type="hidden" name="id" id="id_id"><div class="row g-1"><div class="form-floating mb-1 col-lg-4"><input type="text" id="id_nome" name="nome" class="form-control" placeholder=" "><label for="id_nome">Nome Cargo</label></div></div></form>';    
+const empresa_form = '<form action="#"><input type="hidden" name="id" id="id_id"><div class="row g-1"><div class="form-floating mb-1 col-lg-4"><input type="text" id="id_nome" name="nome" class="form-control" placeholder=" "><label for="id_nome">Nome Empresa</label></div><div class="form-floating mb-1 col-lg-4"><input type="text" id="id_cnpj" name="cnpj" class="form-control" placeholder=" "><label for="id_cnpj">CNPJ</label></div></div><div class="row g-1"><div class="form-floating mb-1 col-lg-8"><input type="text" id="id_razaoSocial" name="razaoSocial" class="form-control" placeholder=" "><label for="id_razaoSocial">Razão Social</label></div></div></form>';
+const cargo_form = '<form action="#"><input type="hidden" name="id" id="id_id"><div class="row g-1"><div class="form-floating mb-1 col-lg-4"><input type="text" id="id_nome" name="nome" class="form-control" placeholder=" "><label for="id_nome">Nome Cargo</label></div></div></form>';
+const funcionario_form = '<form action="#"><input type="hidden" id="id_id" name="id"><div class="row g-1"><div class="form-floating mb-1 col-lg-2"><input type="text" class="form-control" name="matricula" id="id_matricula" placeholder=" "><label for="id_matricula">Matricula</label></div><div class="form-floating mb-1 col-lg-4"><select class="form-select" id="id_empresa" name="empresa"></select><label for="id_empresa">Empresa</label></div></div><div class="row g-1"><div class="form-floating mb-1 col-lg-6"><input type="text" class="form-control" name="nome" id="id_nome" placeholder=" "><label for="id_nome">Nome</label></div></div><div class="row g-1"><div class="form-floating mb-1 col-lg-2"><select class="form-select" id="id_cargo" name="cargo"></select><label for="id_cargo">Cargo</label></div><div class="form-floating mb-1 col-lg-2"><input type="date" class="form-control" name="admissao" id="id_admissao"><label for="id_admissao">Admissão</label></div><div class="form-floating mb-1 col-lg-2"><select class="form-select bg-body-secondary" id="id_status" name="status"><option value="Ativo" selected>Ativo</option><option value="Afastado">Afastado</option><option value="Desligado">Desligado</option></select><label for="id_status">Status</label></div></div></form>';
 var main_table = null;
 // ***************************
 function guiEmpresas(){
@@ -20,7 +21,7 @@ function guiEmpresas(){
     });
     addControls([{classList:'btn btn-sm btn-dark',innerHTML:'<i class="fas fa-pen"></i>',action:'guiEmpresaId(this)'}]);
     setTimeout(() => {main_table.filterInput.focus()}, 120);
-    model_label.innerHTML = 'Empresas';
+    model_label.innerHTML = 'Empresa';
     back_btn.classList.remove('d-none');
     back_btn.onclick = () => {document.getElementById('clear').click()};
     add_btn.classList.remove('d-none');
@@ -85,7 +86,7 @@ function guiCargos(){
     });
     addControls([{classList:'btn btn-sm btn-dark',innerHTML:'<i class="fas fa-pen"></i>',action:'guiCargoId(this)'}]);
     setTimeout(() => {main_table.filterInput.focus()}, 120);
-    model_label.innerHTML = 'Cargos';
+    model_label.innerHTML = 'Cargo';
     back_btn.classList.remove('d-none');
     back_btn.onclick = () => {document.getElementById('clear').click()};
     add_btn.classList.remove('d-none');
@@ -136,6 +137,78 @@ function guiCargoId(el){
         guiCargos();
     };
     setTimeout(() => {document.getElementById('id_nome').focus()}, 120);
+}
+// *********************
+function guiFuncionarios(){
+    guiClear();
+    model_label.innerHTML = 'Funcionario';
+    back_btn.classList.remove('d-none');
+    back_btn.onclick = () => {document.getElementById('clear').click()};
+    add_btn.classList.remove('d-none');
+    add_btn.onclick = () => {guiFuncionarioAdd()};
+
+}
+function guiFuncionarioAdd(){
+    guiClear();
+    main_container.innerHTML = funcionario_form;
+    let select = document.getElementById('id_empresa');
+    model.empresas.forEach((e) => {
+        let empresa = document.createElement('option');
+        empresa.value = e.id;
+        empresa.innerHTML = e.nome;
+        select.appendChild(empresa);
+    });
+    back_btn.classList.remove('d-none');
+    back_btn.onclick = () => {guiFuncionarios();}
+    submit_btn.classList.remove('d-none');
+    submit_btn.onclick = () => {
+        let form = formToDict();
+        if(form.matricula.trim() == ''){dotNotify('danger', '<b>Erro:</b> Campo <b>matrícula</b> obrigatório'); return false;}
+        if(form.nome.trim() == ''){dotNotify('danger', '<b>Erro:</b> Campo <b>nome</b> obrigatório'); return false;}
+        model.funcionarios.push(new Funcionario(form));
+        modelSave();
+        dotNotify('success', `Funcionario <b>${form.matricula}</b> cadastrado`);
+        guiFuncionarios();
+    };
+    setTimeout(() => {document.getElementById('id_matricula').focus()}, 120);
+}
+function guiFuncionarioId(el){
+    guiClear();
+    main_container.innerHTML = funcionario_form;
+    let id = el.parentNode.parentNode.firstChild.innerText;
+    let target = model.funcionarios.filter((e) => {return e.id == id})[0];
+    let index = model.funcionarios.indexOf(target);
+    formLoad(target); 
+    let select = document.getElementById('id_empresa');
+    model.empresas.forEach((e) => {
+        let empresa = document.createElement('option');
+        empresa.value = e.id;
+        empresa.innerHTML = e.nome;
+        if(target.empresa == e.id){empresa.selected = true}
+        select.appendChild(empresa);
+    });
+    back_btn.classList.remove('d-none');
+    back_btn.onclick = () => {guiFuncionarios();}
+    submit_btn.classList.remove('d-none');
+    modalDelete_btn.classList.remove('d-none');
+    submit_btn.onclick = () => {
+        let form = formToDict();
+        if(form.matricula.trim() == ''){dotNotify('danger', '<b>Erro:</b> Campo <b>matrícula</b> obrigatório'); return false;}
+        if(form.nome.trim() == ''){dotNotify('danger', '<b>Erro:</b> Campo <b>nome</b> obrigatório'); return false;}
+        model.funcionarios[index] = form;
+        dotNotify('success', `Funcionario <b>${form.matricula}</b> atualidado`);
+        modelSave();
+        guiFuncionarios();
+    }
+    delete_btn.onclick = () => {
+        let tmp = model.funcionarios[index].matricula;
+        model.funcionarios.splice(index, 1);
+        modalDelete.hide();
+        dotNotify('warning', `Funcionario <b>${tmp}</b> removido, este processo não pode ser desfeito.`)
+        modelSave();
+        guiCargos();
+    };
+    setTimeout(() => {document.getElementById('id_matricula').focus()}, 120);
 }
 // *******************
 

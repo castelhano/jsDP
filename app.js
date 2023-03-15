@@ -1,4 +1,4 @@
-var model = localStorage.model ? JSON.parse(localStorage.model) : {index:{empresa:0, funcionario:0, cargo:0}, empresas:[], cargos:[], ativos:{}, afastados:{}, desligados:{}};
+var model = localStorage.model ? JSON.parse(localStorage.model) : {index:{empresa:0, funcionario:0, cargo:0}, empresas:[], cargos:[], funcionarios:[]};
 function modelRead(data=localStorage.model){}
 function modelSave(){localStorage.model = JSON.stringify(model)}
 function modelDownload(){
