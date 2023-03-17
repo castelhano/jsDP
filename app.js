@@ -53,3 +53,10 @@ function guiClear(){
     modalDelete_btn.classList.add('d-none');
     delete_btn.onclick = null;
 }
+
+function dateStrBr2Date(str){
+    let [dia, mes, ano] = str.split('/');
+    if(!Date.parse(`${ano}-${mes}-${dia}`)){return null}
+    return new Date(`${ano}-${mes}-${dia} 00:00`)
+
+}

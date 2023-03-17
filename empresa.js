@@ -17,7 +17,7 @@ function guiEmpresas(){
         canFilter: true,
         filterCols: ['nome']
     });
-    addControls([{classList:'btn btn-sm btn-dark',innerHTML:'<i class="fas fa-pen"></i>',action:'guiEmpresaId(this)'}]);
+    if(main_table.raw.length > 0){addControls([{classList:'btn btn-sm btn-dark',innerHTML:'<i class="fas fa-pen"></i>',action:'guiEmpresaId(this)'}])}
     setTimeout(() => {main_table.filterInput.focus()}, 120);
     model_label.innerHTML = 'Empresa';
     back_btn.classList.remove('d-none');
@@ -59,7 +59,7 @@ function guiEmpresaId(el){
         let form = formToDict();
         if(form.nome.trim() == ''){dotNotify('danger', '<b>Erro:</b> Campo <b>nome</b> obrigatório'); return false;}
         model.empresas[index] = form;
-        dotNotify('success', `Empresa <b>${form.nome}</b> atualidada`);
+        dotNotify('success', `Empresa <b>${form.nome}</b> atualizada`);
         modelSave();
         guiEmpresas();
     }

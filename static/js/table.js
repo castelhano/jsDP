@@ -65,7 +65,7 @@ class jsTable{
         this.rowsCountLabelClasslist = options?.rowsCountLabelClasslist || 'btn btn-sm btn-dark';
         this.addRowButtonClasslist = options?.addRowButtonClasslist || 'btn btn-sm btn-outline-success';
         this.addRowButtonText = options?.addRowButtonText || '<i class="fas fa-plus px-1"></i>';
-        this.newRowClasslist = options?.newRowClasslist || 'table-success';
+        this.newRowClasslist = options?.newRowClasslist || '';
         this.deleteRowButtonClasslist = options?.deleteRowButtonClasslist || 'btn btn-sm btn-secondary';
         this.deleteRowButtonText = options?.deleteRowButtonText || '<i class="fas fa-trash"></i>';
         this.saveButtonClasslist = options?.saveButtonClasslist || 'btn btn-sm btn-outline-primary';
@@ -226,11 +226,11 @@ class jsTable{
             capControlsGroup.appendChild(this.rowsCountLabel);
         }
         if(this.canAddRow){
-            let btn = document.createElement('button');
-            btn.classList = this.addRowButtonClasslist;
-            btn.onclick = () => this.addRow();
-            btn.innerHTML = this.addRowButtonText;
-            capControlsGroup.appendChild(btn);
+            this.addRowBtn = document.createElement('button');
+            this.addRowBtn.classList = this.addRowButtonClasslist;
+            this.addRowBtn.onclick = () => this.addRow();
+            this.addRowBtn.innerHTML = this.addRowButtonText;
+            capControlsGroup.appendChild(this.addRowBtn);
         }
         if(this.canSave){
             this.saveBtn = document.createElement('button');

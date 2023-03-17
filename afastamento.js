@@ -13,19 +13,19 @@ class Afastamento{
     nextId(){return model.index.afastamento++;}
 }
 
-function guiAfastamentos(){
+function guiAfastamentos(funcionario=null){
     guiClear();
-    main_table = new jsTable('afastamentos', {
-        container: main_container,
-        data: model.afastamentos,
-        canFilter: true,
-        filterCols: ['nome']
-    });
-    addControls([{classList:'btn btn-sm btn-dark',innerHTML:'<i class="fas fa-pen"></i>',action:'guiAfastamentoId(this)'}]);
-    setTimeout(() => {main_table.filterInput.focus()}, 120);
+    let dados = funcionario ? model.afastamentos.filter((e) => {return e.matricula == funcionario.matricula.value}) : model.afastamentos;
+    let options = {container: main_container,data: dados};
+    if(funcionario){options.caption = `<h5 class="ps-1">Afastamentos: <span class="text-purple">${funcionario.matricula} ${funcionario.nome}</span></h5>`}
+    main_table = new jsTable('afastamentos', options);
+    if(main_table.raw.length > 0){addControls([{classList:'btn btn-sm btn-dark',innerHTML:'<i class="fas fa-pen"></i>',action:'guiAfastamebtoId(this)'}])}
     model_label.innerHTML = 'Afastamento';
     back_btn.classList.remove('d-none');
-    back_btn.onclick = () => {document.getElementById('clear').click()};
+    back_btn.onclick = () => {
+        if(funcionario){guiFuncionarios(funcionario)}
+        else{document.getElementById('clear').click()}
+    }
     add_btn.classList.remove('d-none');
     add_btn.onclick = () => {guiAfastamentoAdd()};
 
