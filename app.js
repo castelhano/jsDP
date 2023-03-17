@@ -60,3 +60,8 @@ function dateStrBr2Date(str){
     return new Date(`${ano}-${mes}-${dia} 00:00`)
 
 }
+
+function dateStandart2DateBR(str){
+    let [ano, mes, dia] = str.split('-');
+    return `${dia}/${mes}/${ano}`;
+}

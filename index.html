@@ -85,11 +85,13 @@
                 </ul>
             </div>
             <div class="card-body" id="main_container">
-                <div class="row">
-                    <div class="col-auto d-grid gap-1">
-                        <button class="btn btn-sm btn-purple" onclick="guiAfastamentos()" type="button">Afastados</button>
+                <div class="row g-3">
+                    <div class="col-lg-auto">
+                        <div class="d-block d-lg-grid gap-1">
+                            <button id="afastados_btn" class="btn btn-sm btn-purple" onclick="guiAfastamentos()" type="button">A<b>f</b>astados</button>
+                        </div>
                     </div>
-                    <div class="col"></div>
+                    <div class="col-lg">em desenvolvimento...</div>
                 </div>
             </div>
         </div>
@@ -130,6 +132,8 @@
         if(localStorage.theme){document.getElementById('themeSwitch').checked = localStorage.theme == 'dark';}
         document.getElementById('themeSwitch').onclick = (e)=>{if(e.target.checked){document.documentElement.dataset.bsTheme = 'dark';localStorage.theme = 'dark' }else{document.documentElement.dataset.bsTheme = 'light';localStorage.theme = 'light'}};
         
+        SHORTCUT_MAP['fTFF'] = () => {try{document.getElementById('afastados_btn').click()}catch(e){}}
+
         SHORTCUT_MAP['fFTF'] = () => {try{main_table.filterInput.select()}catch(e){}};
         SHORTCUT_MAP['arrowrightFTF'] = () => {try{main_table.nextPage()}catch(e){}};
         SHORTCUT_MAP['arrowleftFTF'] = () => {try{main_table.previousPage()}catch(e){}};

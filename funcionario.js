@@ -13,14 +13,6 @@ class Funcionario{
     }
     nextId(){return model.index.funcionario++;}
 }
-class Atestado{
-    constructor(options){
-        this.data = options?.data || '';
-        this.dias = options?.dias || 1;
-        this.retorno = options?.retorno || '';
-        this.status = options?.status || 'Deferido';
-    }
-}
 
 function guiFuncionarios(funcionario=null){
     guiClear();
@@ -84,64 +76,6 @@ function guiBuildFormFuncionario(){
     setTimeout(() => {document.getElementById('id_matricula').focus()}, 120);
 }
 
-function guiAtestados(funcionario){
-    guiClear();
-    main_container.innerHTML = '';
-    main_table = new jsTable('atestados', {
-        container: main_container,
-        data: funcionario.atestados,
-        caption: `<h5 class="ps-1">Atestados: <span class="text-purple">${funcionario.matricula} ${funcionario.nome}</span></h5>`,
-        editableCols: ['data','dias','cid','status'],
-        canAddRow: true,
-        canDeleteRow: true,
-        canSave:true,
-        save: () => {
-            funcionario.atestados = main_table.getRows();
-            modelSave();
-            dotNotify('success', 'Atesados salvos');
-        }
-    });
-    add_btn.onclick = () => {main_table.addRowBtn.click()}
-    submit_btn.onclick = () => {main_table.saveBtn.click()}
-    main_table.addRowBtn.onclick = () => { // Sobregrava funcionalidade do addRowBtn
-        let atm = new Atestado({data:dotToday(), dias:1, retorno: dotToday(1)});
-        if(main_table.raw.length > 0){main_table.appendData([atm])}
-        else{main_table.loadData([atm])}
-        atestadosTableAddListeners();
-    }
-    function calcularRetorno(tr){
-        let strDate = tr.firstChild.innerText;
-        let dias = parseInt(tr.firstChild.nextSibling.innerText);
-        let date = dateStrBr2Date(strDate);
-        if(!date){tr.firstChild.innerText = '#Invalid';return false;}
-        if(!dias || dias < 1){
-            tr.firstChild.nextSibling.innerText = '#';
-            tr.firstChild.nextSibling.nextSibling.innerText = '';
-            return false;
-        }
-        date.setDate(date.getDate() + dias);
-        const dd = String(date.getDate()).padStart(2, '0');
-        const mm = String(date.getMonth() + 1).padStart(2, '0');
-        const yyyy = date.getFullYear();
-        tr.firstChild.nextSibling.nextSibling.innerText = `${dd}/${mm}/${yyyy}`;
-    }
-    function atestadosTableAddListeners(){
-        if(main_table.raw.length > 0){
-            main_table.tbody.querySelectorAll('tr').forEach((el) => { // Adiciona listener para calculo do retorno de dias para as linhas pre cadastradas
-                el.firstChild.onblur = () => {calcularRetorno(el)}
-                el.firstChild.nextElementSibling.onblur = () => {calcularRetorno(el)}
-            });
-        }
-    }
-    atestadosTableAddListeners();
-    back_btn.classList.remove('d-none');
-    back_btn.onclick = () => {
-        guiFuncionarios(funcionario);
-    }
-}
-
-
-
 function funcionarioFormClean(){
     let form = {id:'', nome:'',empresa:0,cargo:0,admissao:'',status:'Ativo'};
     formLoad(form);
@@ -153,22 +87,14 @@ function funcionarioFormCleanAll(){
 }
 
 function funcionarioExtrasStart(){
-    let atestados_btn = document.createElement('button');atestados_btn.id = "atestados_btn";atestados_btn.type = 'button';atestados_btn.classList = 'btn btn-sm btn-warning me-1';atestados_btn.innerHTML = 'A<b>t</b>estados';
-    atestados_btn.onclick = () => {
-        let matricula = document.getElementById('id_matricula');
-        let target = model.funcionarios.filter((e) => {return e.matricula == matricula.value})[0];
-        guiAtestados(target);
-    }
-    document.getElementById('funcionario_extras').appendChild(atestados_btn);
     afastamentos_btn = document.createElement('button');afastamentos_btn.id = 'afastamentos_btn';afastamentos_btn.type = 'button';afastamentos_btn.classList = 'btn btn-sm btn-purple me-1';afastamentos_btn.innerHTML = 'A<b>f</b>astamentos';
     document.getElementById('funcionario_extras').appendChild(afastamentos_btn);
 }
 function funcionarioExtrasShow(){
     document.getElementById('funcionario_extras').classList.remove('d-none');
-    SHORTCUT_MAP['tTFF'] = () => {document.getElementById('atestados_btn').click()};
     SHORTCUT_MAP['fTFF'] = () => {document.getElementById('afastamentos_btn').click()};
 }
 function funcionarioExtrasHide(){
     document.getElementById('funcionario_extras').classList.add('d-none');
-    SHORTCUT_MAP['tTFF'] = null;
+    SHORTCUT_MAP['fTFF'] = null;
 }
