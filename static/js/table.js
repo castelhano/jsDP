@@ -53,6 +53,7 @@ class jsTable{
         this.csvHeaders = options?.csvHeaders != undefined ? options.csvHeaders : true; // Define se sera incluido cabecalhos no arquivo de exportacao CSV
         this.canExportJson = options?.canExportJson != undefined ? options.canExportJson : false;
         this.editableCols = options?.editableCols || [];
+        this.hideCols = options?.hideCols || [];
         this.fileName = options?.fileName || this.id; // Nome dos arquivos de exportacao (sem a extensao)
         this.enablePaginate = options?.enablePaginate != undefined ? options.enablePaginate : false; // Booleno setado para true se paginacao estiver ativa para tabela
         this.pgControlContainer = options?.pgControlContainer || false; // Controles de paginacao por default criados logo abaixo da tabela, pode ser alterado setando esta variavel
@@ -111,7 +112,7 @@ class jsTable{
         let tr = document.createElement('tr');
         for(let i = 0;i < this.data.length;i++){
             for(let j in this.data[i]){
-                if(!this.headers.includes(j)){
+                if(!this.headers.includes(j) && !this.hideCols.includes(j)){
                     this.headers.push(j);
                     let th = document.createElement('th');
                     th.setAttribute('data-key',j);

@@ -8,6 +8,30 @@ const modalDelete = new bootstrap.Modal(document.getElementById('delete_modal'),
 const delete_btn = document.getElementById('delete');
 const model_label = document.getElementById('model_label');
 var main_table = null;
+const dayWeeks = {0:'DOM', 1:'SEG', 2:'TER', 3:'QUA', 4:'QUI', 5:'SEX', 6:'SAB'};
+
+function afastamentosPendentes(){
+    let pendentes = model.afastamentos.filter((e) => {
+        if(!e.retorno){return true}
+        return dateGTENow(e.retorno);
+    })
+    pendentes.sort((a,b) => (dateStrBr2GetTime(a.retorno) > dateStrBr2GetTime(b.retorno)) ? 1 : ((dateStrBr2GetTime(b.retorno) > dateStrBr2GetTime(a.retorno)) ? -1 : 0));
+    let ul = document.getElementById('acompanhamento_list');
+    for(i in pendentes){
+        let li = document.createElement('li');li.classList = 'd-flex justify-content-between';
+        if(pendentes[i].retorno){
+            li.innerHTML = `<span>${pendentes[i].retorno} ${dateGetDayWeek(pendentes[i].retorno)} <a href="#"><b>${pendentes[i].funcionario}</b> - ${model.funcionarios.filter((e)=>{return e.matricula == pendentes[i].funcionario})[0].nome}</a></span><small class="text-purple">${dataGetDaysFromNow(pendentes[i].retorno)}</small>`
+        }
+        else{
+            li.innerHTML = `<span>--/--/---- --- <a href="#"><b>${pendentes[i].funcionario}</b> - ${model.funcionarios.filter((e)=>{return e.matricula == pendentes[i].funcionario})[0].nome}</a></span><small class="text-purple">--</small>`
+        }
+        ul.appendChild(li)
+    }
+}
+
+afastamentosPendentes();
+
+
 
 
 function modelRead(data=localStorage.model){}
@@ -25,8 +49,10 @@ function formToDict(){
     for([key, value] of formData){resp[key] = value}
     return resp;
 }
-function formLoad(dict){
-    for(key in dict){document.getElementById(`id_${key}`).value = dict[key]}
+function formLoad(dict, ignore=[]){
+    for(key in dict){
+        if(!ignore.includes(key)){document.getElementById(`id_${key}`).value = dict[key]}
+    }
 }
 
 function addControls(btns){
@@ -52,6 +78,7 @@ function guiClear(){
     submit_btn.onclick = null;
     modalDelete_btn.classList.add('d-none');
     delete_btn.onclick = null;
+    document.activeElement.blur();
 }
 
 function dateStrBr2Date(str){
@@ -64,4 +91,42 @@ function dateStrBr2Date(str){
 function dateStandart2DateBR(str){
     let [ano, mes, dia] = str.split('-');
     return `${dia}/${mes}/${ano}`;
+}
+
+function dateCompare(d1, d2){
+    d1 = dateStrBr2Date(d1);
+    return d1.getTime()
+    if(d1.getTime() == d2.getTime()){return 0}
+    else{}
+}
+
+function dateGTENow(d1){
+    let today = new Date()
+    today.setHours(0,0,0,0);
+    let [dia, mes, ano] = d1.split('/');
+    d1 = new Date(`${ano}-${mes}-${dia} 00:00`);
+    return d1.getTime() >= today.getTime();
+}
+
+function dateStrBr2GetTime(d1){
+    let [dia, mes, ano] = d1.split('/');
+    return new Date(`${ano}-${mes}-${dia} 00:00`).getTime();
+}
+
+function dateGetDayWeek(d1){
+    let [dia, mes, ano] = d1.split('/');
+    d1 = new Date(`${ano}-${mes}-${dia} 00:00`);
+    return dayWeeks[d1.getDay()];
+}
+
+function dataGetDaysFromNow(d1){
+    let today = new Date()
+    today.setHours(0,0,0);
+    let [dia, mes, ano] = d1.split('/');
+    d1 = new Date(`${ano}-${mes}-${dia} 00:00`);
+    let diff = d1.getTime() - today.getTime();
+    let diffDays = Math.floor(diff / (1000*3600*24)) + 1;
+    if(diffDays == 0){return 'Hoje'}
+    if(diffDays == 1){return 'Amanha'}
+    return `${diffDays} dias`;
 }
