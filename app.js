@@ -1,10 +1,12 @@
-var model = localStorage.model ? JSON.parse(localStorage.model) : {index:{empresa:0, funcionario:0, cargo:0, afastamento:0}, empresas:[], cargos:[], funcionarios:[], afastamentos:[]};
-const main_container = document.getElementById('main_container');
+var model = localStorage.model ? JSON.parse(localStorage.model) : {index:{version:1, empresa:0, funcionario:0, cargo:0, afastamento:0}, empresas:[], cargos:[], funcionarios:[], afastamentos:[],codigos:[]};
+const main_container = document.getElementById('main_container');///
+const btn_extra_container = document.getElementById('btn_extra_container');
 const add_btn = document.getElementById('add');
 const submit_btn = document.getElementById('submit');
 const back_btn = document.getElementById('back');
 const modalDelete_btn = document.getElementById('modal_delete_btn');
 const modalDelete = new bootstrap.Modal(document.getElementById('delete_modal'), {keyboard: false});
+const modalUpload = new bootstrap.Modal(document.getElementById('upload_modal'), {keyboard: false});
 const delete_btn = document.getElementById('delete');
 const model_label = document.getElementById('model_label');
 var main_table = null;
@@ -20,25 +22,67 @@ function afastamentosPendentes(){
     for(i in pendentes){
         let li = document.createElement('li');li.classList = 'd-flex justify-content-between';
         if(pendentes[i].retorno){
-            li.innerHTML = `<span>${pendentes[i].retorno} ${dateGetDayWeek(pendentes[i].retorno)} <a href="#"><b>${pendentes[i].funcionario}</b> - ${model.funcionarios.filter((e)=>{return e.matricula == pendentes[i].funcionario})[0].nome}</a></span><small class="text-purple">${dataGetDaysFromNow(pendentes[i].retorno)}</small>`
+            li.innerHTML = `<span>${pendentes[i].retorno} ${dateGetDayWeek(pendentes[i].retorno)} <span class="btn btn-link p-0 text-decoration-none" onclick="guiAfastamentoId(null, ${pendentes[i].id})"><b>${pendentes[i].funcionario}</b> - ${model.funcionarios.filter((e)=>{return e.matricula == pendentes[i].funcionario})[0].nome}</span></span><small class="text-purple">${dataGetDaysFromNow(pendentes[i].retorno)}</small>`
         }
         else{
             li.innerHTML = `<span>--/--/---- --- <a href="#"><b>${pendentes[i].funcionario}</b> - ${model.funcionarios.filter((e)=>{return e.matricula == pendentes[i].funcionario})[0].nome}</a></span><small class="text-purple">--</small>`
         }
         ul.appendChild(li)
     }
+    if(ul.childNodes.length == 0){
+        ul.innerHTML = '<li>Nenhum retorno agendado...<li>';
+    }
 }
 
 afastamentosPendentes();
 
-
-
-
 function modelRead(data=localStorage.model){}
 function modelSave(){localStorage.model = JSON.stringify(model)}
 function modelDownload(){
-    dotNotify('warning', 'Baixando JSON....');
+    model.index.version++;
+    let data = JSON.stringify(model);
+    let dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(data);
+    let filename = `afastamentos_${model.index.version}.json`;
+    let btn = document.createElement('a');
+    btn.classList = 'd-none';
+    btn.setAttribute('href', dataUri);
+    btn.setAttribute('download', filename);
+    btn.click();
+    btn.remove();
+    dotNotify('success', 'Arquivos <b>exportado</b> com sucesso.')
 }
+
+function modelUpload(){
+    let file = document.getElementById('modelInputFile').files[0];
+    let helper = document.getElementById('uploadModalHelper');
+    if(!file){
+        helper.innerHTML = '<div class="callout callout-danger"><div class="body bg-danger-subtle">Selecione um arquivo</div></div>';
+        return false;
+    }
+    helper.innerHTML = '';
+    let fr = new FileReader();
+    fr.onload = (function(){
+        try {
+            let result = JSON.parse(fr.result);
+            let valid = true;
+            if(!('index' in result)){valid = false}
+            else if(!('empresas' in result)){valid = false}
+            else if(!('cargos' in result)){valid = false}
+            else if(!('funcionarios' in result)){valid = false}
+            else if(!('afastamentos' in result)){valid = false}
+            else if(!('codigos' in result)){valid = false}
+            if(!valid){throw 'error'}
+            model = result;
+            modelSave();
+            dotNotify('success', 'Dados carregados com sucesso.');
+        } catch (e) {
+            dotNotify('danger', 'O arquivo tem formato <b>inválido</b>, processo abortado.');
+        }
+    });
+    fr.readAsText(document.getElementById('modelInputFile').files[0]);
+    modalUpload.hide();
+}
+
 function modelClearLocal(){localStorage.removeItem('model')}
 
 
@@ -68,6 +112,12 @@ function addControls(btns){
     })
     
 }
+
+function loadingDisplay(){
+    // main_container
+}
+
+
 function guiClear(){
     main_container.innerHTML = '';
     add_btn.classList.add('d-none');
@@ -78,6 +128,7 @@ function guiClear(){
     submit_btn.onclick = null;
     modalDelete_btn.classList.add('d-none');
     delete_btn.onclick = null;
+    btn_extra_container.innerHTML = '';
     document.activeElement.blur();
 }
 
@@ -85,19 +136,16 @@ function dateStrBr2Date(str){
     let [dia, mes, ano] = str.split('/');
     if(!Date.parse(`${ano}-${mes}-${dia}`)){return null}
     return new Date(`${ano}-${mes}-${dia} 00:00`)
+}
 
+function dateStrBr2Standard(str){
+    let [dia, mes, ano] = str.split('/');
+    return `${ano}-${mes}-${dia}`;
 }
 
 function dateStandart2DateBR(str){
     let [ano, mes, dia] = str.split('-');
     return `${dia}/${mes}/${ano}`;
-}
-
-function dateCompare(d1, d2){
-    d1 = dateStrBr2Date(d1);
-    return d1.getTime()
-    if(d1.getTime() == d2.getTime()){return 0}
-    else{}
 }
 
 function dateGTENow(d1){
