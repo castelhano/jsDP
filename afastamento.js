@@ -1,4 +1,4 @@
-const afastamento_form = '<form action="#"><input type="hidden" id="id_id" name="id"><div class="row g-1"><div class="form-floating mb-lg-1 col-auto"><input type="text" id="id_funcionario" name="funcionario" class="form-control"><label for="id_funcionario">Matricula</label></div><div class="form-floating mb-lg-1 col"><input type="text" id="id_nome_funcionario" class="form-control" disabled><label for="id_nome_funcionario">Nome</label></div><div class="form-floating mb-1 col-lg-2"><input type="text" id="id_cargo_funcionario" class="form-control" disabled><label for="id_cargo_funcionario">Cargo</label></div></div><div class="row g-1"><div class="form-floating mb-lg-1 col-lg-2"><select class="form-select" id="id_motivo" name="motivo"><option value="Doenca">Doenca</option><option value="Acidente">Acidente</option></select><label for="id_motivo">Motivo</label></div><div class="form-floating mb-lg-1 col-lg-2"><input type="date" id="id_pericia" name="pericia" class="form-control"><label for="id_pericia">Pericia</label></div><div class="form-floating mb-lg-1 col-lg-2"><input type="date" id="id_inicio" name="inicio" class="form-control"><label for="id_inicio">Inicio</label></div><div class="form-floating mb-lg-1 col-lg-2"><input type="number" id="id_dias" name="dias" min="1" value="15" class="form-control"><label for="id_dias">Dias ATM</label></div><div class="form-floating mb-lg-1 col-lg-2"><input type="text" id="id_retorno" name="retorno" class="form-control fw-bold" tabindex="-1" readonly><label for="id_retorno">Retorno</label></div><div class="form-floating mb-1 col-lg-2"><select class="form-select" id="id_inss" name="inss"><option value="Sim">Sim</option><option value="Nao">Nao</option></select><label for="id_inss">INSS</label></div></div><div class="row g-1"><div class="form-floating mb-1 col-auto"><input type="text" id="id_codigo" name="codigo" class="form-control"><label for="id_codigo">Codigo</label></div><div class="form-floating mb-1 col"><input type="text" id="id_codigo_descricao" name="codigo_descricao" class="form-control" disabled><label for="id_codigo_descricao">Descrição</label></div></div><div class="row g-1"><div class="col"><textarea name="parecer" id="id_parecer" class="form-control" placeholder="Parecer médico" style="min-height: 150px;"></textarea></div><div class="col"id="avaliacoes_container"></div></div></form>';
+const afastamento_form = '<form action="#"><input type="hidden" id="id_id" name="id"><div class="row g-1"><div class="form-floating mb-lg-1 col-auto"><input type="text" id="id_funcionario" name="funcionario" class="form-control"><label for="id_funcionario">Matricula</label></div><div class="form-floating mb-lg-1 col"><input type="text" id="id_nome_funcionario" class="form-control" disabled><label for="id_nome_funcionario">Nome</label></div><div class="form-floating mb-1 col-lg-2"><input type="text" id="id_cargo_funcionario" class="form-control" disabled><label for="id_cargo_funcionario">Cargo</label></div></div><div class="row g-1"><div class="form-floating mb-lg-1 col-lg-2"><select class="form-select" id="id_motivo" name="motivo"><option value="Doenca">Doenca</option><option value="Acidente">Acidente</option></select><label for="id_motivo">Motivo</label></div><div class="form-floating mb-lg-1 col-lg-2"><input type="date" id="id_pericia" name="pericia" class="form-control"><label for="id_pericia">Pericia</label></div><div class="form-floating mb-lg-1 col-lg-2"><input type="date" id="id_inicio" name="inicio" class="form-control"><label for="id_inicio">Inicio</label></div><div class="form-floating mb-lg-1 col-lg-2"><input type="number" id="id_dias" name="dias" min="1" value="15" class="form-control"><label for="id_dias">Dias ATM</label></div><div class="form-floating mb-lg-1 col-lg-2"><input type="text" id="id_retorno" name="retorno" class="form-control fw-bold" tabindex="-1" readonly><label for="id_retorno">Retorno</label></div><div class="form-floating mb-1 col-lg-2"><select class="form-select" id="id_inss" name="inss"><option value="Sim">Sim</option><option value="Nao">Nao</option></select><label for="id_inss">INSS</label></div></div><div class="row g-1"><div class="form-floating mb-1 col-auto"><input type="text" id="id_codigo" name="codigo" class="form-control"><label for="id_codigo">Codigo</label></div><div class="form-floating mb-1 col"><input type="text" id="id_codigo_descricao" name="codigo_descricao" class="form-control" disabled><label for="id_codigo_descricao">Descrição</label></div></div><div class="row g-1"><div class="col"><textarea name="parecer" id="id_parecer" class="form-control" placeholder="Parecer médico" style="min-height: 150px;"></textarea></div><div class="col" id="avaliacoes_container"></div></div></form>';
 
 class Afastamento{
     constructor(options){
@@ -74,9 +74,11 @@ function guiAfastamentoAdd(){
     codigo.onblur = () => {
         let cod = model.codigos.filter((e) => {return e.codigo == codigo.value})[0];
         if(!cod){
-            codigo.classList.add('is-invalid');
-            codigo.select();
-            document.getElementById('id_codigo_descricao').value = '';
+            try {
+                codigo.classList.add('is-invalid');
+                codigo.select();
+                document.getElementById('id_codigo_descricao').value = '';
+            } catch (e){}
             return false;
         }
         codigo.classList.remove('is-invalid');
@@ -116,6 +118,16 @@ function guiAfastamentoId(el, id_el=null){
     if(target.inicio != ''){document.getElementById('id_inicio').value = dateStrBr2Standard(target.inicio)}
     if(target.codigo != ''){document.getElementById('id_codigo_descricao').value = model.codigos.filter((e) => {return e.codigo == codigo.value})[0].descricao;}
     matricula.setAttribute('readonly','');
+    // ************************
+    main_table = new jsTable('avaliacoes', {
+        container: avaliacoes_container,
+        data: target.avaliacoes,
+        caption: '<b>Retornos</b>'
+    })
+    
+    
+    
+    // ************************
     let funcionario = model.funcionarios.filter((e) => {return e.matricula == target.funcionario})[0];
     document.getElementById('id_nome_funcionario').value = funcionario.nome;
     document.getElementById('id_cargo_funcionario').value = model.cargos[funcionario.cargo].nome;
@@ -124,9 +136,11 @@ function guiAfastamentoId(el, id_el=null){
     codigo.onblur = () => {
         let cod = model.codigos.filter((e) => {return e.codigo == codigo.value})[0];
         if(!cod){
-            codigo.classList.add('is-invalid');
-            codigo.select();
-            document.getElementById('id_codigo_descricao').value = '';
+            try {
+                codigo.classList.add('is-invalid');
+                codigo.select();
+                document.getElementById('id_codigo_descricao').value = '';
+            } catch (e){}
             return false;
         }
         codigo.classList.remove('is-invalid');

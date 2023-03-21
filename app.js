@@ -1,4 +1,4 @@
-var model = localStorage.model ? JSON.parse(localStorage.model) : {index:{version:1, empresa:0, funcionario:0, cargo:0, afastamento:0}, empresas:[], cargos:[], funcionarios:[], afastamentos:[],codigos:[]};
+var model = localStorage.model ? JSON.parse(localStorage.model) : {index:{version:0, empresa:0, funcionario:0, cargo:0, afastamento:0}, empresas:[], cargos:[], funcionarios:[], afastamentos:[],codigos:[]};
 const main_container = document.getElementById('main_container');///
 const btn_extra_container = document.getElementById('btn_extra_container');
 const add_btn = document.getElementById('add');
@@ -39,7 +39,8 @@ afastamentosPendentes();
 function modelRead(data=localStorage.model){}
 function modelSave(){localStorage.model = JSON.stringify(model)}
 function modelDownload(){
-    model.index.version++;
+    let version = model.index.version++;
+    modelSave();
     let data = JSON.stringify(model);
     let dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(data);
     let filename = `afastamentos_${model.index.version}.json`;
