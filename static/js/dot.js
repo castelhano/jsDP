@@ -24,3 +24,23 @@ function dotToday(dias=0, meses=0, anos=0, native=false, el=null){
         else{el.innerHTML = native == true ? `${yyyy}-${mm}-${dd}` : `${dd}/${mm}/${yyyy}`;}
     }
 }
+
+// function dateInputExtra_start(){
+//     document.querySelectorAll('input[type=date]').forEach((el) => {
+//         el.onkeydown = (e) => {
+//             if(e.keyCode == 84){el.value = dotToday(0,0,0,true)} // Precionado a letra T, carrega data atual
+//             else{
+//                 if(![107, 109].includes(e.keyCode)){return} // Se nao for teclas - ou + encerra bloco
+//                 let current = Date.parse(el.value + ' 00:00') ? new Date(el.value + ' 00:00') : new Date();
+//                 if(e.keyCode == 109){ // Precionado -
+//                     current.setDate(current.getDate() - 1);
+//                     el.value = `${current.getFullYear()}-${String(current.getMonth() + 1).padStart(2,'0')}-${String(current.getDate()).padStart(2, '0')}`;
+//                 }
+//                 if(e.keyCode == 107){ // Precionado +
+//                     current.setDate(current.getDate() + 1);
+//                     el.value = `${current.getFullYear()}-${String(current.getMonth() + 1).padStart(2,'0')}-${String(current.getDate()).padStart(2, '0')}`;
+//                 }
+//             }
+//         }
+//     });
+// }

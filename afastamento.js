@@ -100,6 +100,7 @@ function guiAfastamentoAdd(){
         dotNotify('success', `Funcionário <b>${form.funcionario}</b> afastado`);
         guiAfastamentos();
     };
+    dateInputExtra_start();
     setTimeout(() => {matricula.focus()}, 120);
 }
 function guiAfastamentoId(el, id_el=null){
@@ -119,14 +120,32 @@ function guiAfastamentoId(el, id_el=null){
     if(target.codigo != ''){document.getElementById('id_codigo_descricao').value = model.codigos.filter((e) => {return e.codigo == codigo.value})[0].descricao;}
     matricula.setAttribute('readonly','');
     // ************************
+    let translate = {'APTO':'APTO', 'INAPTO': 'INAPTO', 'A':'APTO', 'I': 'INAPTO','#INVALID':'#INVALID'};
     main_table = new jsTable('avaliacoes', {
         container: avaliacoes_container,
         data: target.avaliacoes,
-        caption: '<b>Retornos</b>'
+        caption: '<b>Retornos</b>',
+        canAddRow: true,
+        canDeleteRow: true,
+        editableCols: ['retorno', 'status'],
+        canSave: true,
+        save: () => {
+            let tmp = main_table.getRows();
+            for(let i in tmp){
+                let [dia,mes,ano] = tmp[i].retorno.split('/');
+                if(!Date.parse(`${ano}-${mes}-${ida}`)){tmp[i].retorno = '#ERROR'}
+                if(tmp[i].status != 'APTO' && tmp[i].status != 'INAPTO'){
+                    tmp[i].status = translate[tmp[i].status];
+                    if(tmp[i].status == undefined){tmp[i].status = '#INVALID'}
+                }
+            }
+            // target PAREI AQUIIII
+        }
     })
-    
-    
-    
+    main_table.addRowBtn.onclick = () => {
+        if(main_table.raw.length > 0){main_table.appendData([{retorno:dotToday(), status:'APTO'}])}
+        else{main_table.loadData([{retorno:dotToday(), status:'APTO'}])}
+    };
     // ************************
     let funcionario = model.funcionarios.filter((e) => {return e.matricula == target.funcionario})[0];
     document.getElementById('id_nome_funcionario').value = funcionario.nome;

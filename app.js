@@ -114,11 +114,6 @@ function addControls(btns){
     
 }
 
-function loadingDisplay(){
-    // main_container
-}
-
-
 function guiClear(){
     main_container.innerHTML = '';
     add_btn.classList.add('d-none');

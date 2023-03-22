@@ -228,6 +228,7 @@ class jsTable{
         }
         if(this.canAddRow){
             this.addRowBtn = document.createElement('button');
+            this.addRowBtn.type = 'button';
             this.addRowBtn.classList = this.addRowButtonClasslist;
             this.addRowBtn.onclick = () => this.addRow();
             this.addRowBtn.innerHTML = this.addRowButtonText;
@@ -235,6 +236,7 @@ class jsTable{
         }
         if(this.canSave){
             this.saveBtn = document.createElement('button');
+            this.saveBtn.type = 'button';
             this.saveBtn.classList = this.saveButtonClasslist;
             this.saveBtn.onclick = () => this.save();
             this.saveBtn.innerHTML = this.saveButtonText;
@@ -242,6 +244,7 @@ class jsTable{
         }
         if(this.canDeleteRow){
             this.restoreButton = document.createElement('button');
+            this.restoreButton.type = 'button';
             this.restoreButton.classList = this.restoreButtonClasslist;
             this.restoreButton.onclick = () => this.restoreRow();
             this.restoreButton.innerHTML = this.restoreButtonText;
@@ -249,6 +252,7 @@ class jsTable{
         }
         if(this.canExportCsv){
             this.exportButtonCSV = document.createElement('button');
+            this.exportButtonCSV.type = 'button';
             this.exportButtonCSV.classList = 'btn btn-sm btn-outline-secondary';
             this.exportButtonCSV.onclick = (e) => this.exportCsv(e);
             this.exportButtonCSV.innerHTML = 'CSV';
@@ -257,6 +261,7 @@ class jsTable{
         }
         if(this.canExportJson){
             let btn = document.createElement('button');
+            btn.type = 'button';
             btn.classList = 'btn btn-sm btn-outline-secondary';
             btn.onclick = (e) => this.exportJson(e);
             btn.innerHTML = 'JSON';
