@@ -89,14 +89,16 @@ function funcionarioFormCleanAll(){
 
 function funcionarioShowAll(){
     guiClear();
-    let ajustedForm = model.funcionarios;
+    // let ajustedForm = model.funcionarios;
+    let ajustedForm = JSON.parse(JSON.stringify(model.funcionarios));
+    // ajustedForm = []
     ajustedForm.forEach((e) => {
         e.empresa = model.empresas[e.empresa].nome;
         e.cargo = model.cargos[e.cargo].nome;
     });
     main_table = new jsTable('funcionarios', {
         container: main_container,
-        data: model.funcionarios,
+        data: ajustedForm,
         canFilter: true,
         filterCols: ['matricula', 'nome', 'empresa', 'cargo', 'status'],
         enablePaginate: true
