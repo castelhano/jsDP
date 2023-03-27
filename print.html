@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./static/css/vendor/bootstrap.min.css">
+    <link rel="stylesheet" href="./static/css/dot.css">
+    <title>Document</title>
+</head>
+<body>
+    <div id="print_container" class="p-5">
+        <h6 class="text-center">DEPARTAMENTO DE RECURSOS HUMANOS</h6>
+        <small class="d-block text-center">SERVIÇOS ESPECIALIZADOS EM ENGENHARIA DE SEGURANÇA E EM MEDICINA DO TRABALHO - SESMT</small>
+        <div class="border rounded bg-body-secondary text-center my-4 p-1">AVALIAÇÃO DE ENCAMINHAMENTO DE AFASTAMENTO AO INSS<br>ACIDENTÁRIO / PREVIDENCIÁRIO</div>
+        <div class="row">
+            <div class="col-auto">
+                <ul class="list-unstyled">
+                    <li>Matricula:</li>
+                    <li>Nome:</li>
+                    <li>Função:</li>
+                    <li>Admissão:</li>
+                    <li>Motivo atestados:</li>
+                    <li>Duração Atestados (dias):</li>
+                    <li>Encaminhado INSS:</li>
+                    <li>Cod Afastamento:</li>
+                    <li>Data Perícia:</li>
+                    <li>Retorno ao Trabalho:</li>
+                </ul>
+            </div>
+            <div class="col">
+                <ul id="lista_dados_afastamento" class="list-unstyled fs-bold">
+                    <li><b data-itKey="matricula"></b></li>
+                    <li><b data-itKey="nome"></b></li>
+                    <li><b data-itKey="cargo"></b></li>
+                    <li><b data-itKey="admissao"></b></li>
+                    <li><b data-itKey="motivo"></b></li>
+                    <li><b data-itKey="dias" data-itPosfix=" dia(s)"></b></li>
+                    <li><b>SIM</b></li>
+                    <li><b data-itKey="codigo"></b></li>
+                    <li><b data-itKey="pericia"></b></li>
+                </ul>
+            </div>
+        </div>
+        <div class="border rounded bg-body-secondary text-center mt-2 mb-4 p-1">PARECER RH / MÉDICO DO TRABALHO</div>
+        <div data-itKey="parecer"></div>
+    </page>
+
+    <script src="./static/js/vendor/jsPDF.js"></script>
+    <script src="./static/js/interpolate.js"></script>
+    <script src="./static/js/url.js"></script>
+    <script>
+        let model = JSON.parse(localStorage.model);
+        let id = urlGet('id');
+        const afastamento = model.afastamentos.filter((e)=>{ return e.id == id})[0]
+        const funcionario = model.funcionarios.filter((e)=>{return e.matricula == afastamento.funcionario})[0]
+        const cargo = model.cargos.filter((e)=>{return e.id == funcionario.cargo})[0]
+        if(afastamento.avaliacao != ''){
+            let retornos = JSON.parse(afastamento.avaliacao);
+            for(let i in retornos){
+                let li = document.createElement('li');
+                li.innerHTML = `<b>${retornos[i].retorno} - ${retornos[i].status}</b>`;
+                document.getElementById('lista_dados_afastamento').appendChild(li);
+            }
+        }
+        let plotData = {
+            matricula: afastamento.funcionario,
+            nome: funcionario.nome,
+            cargo: cargo.nome,
+            admissao: funcionario.admissao,
+            motivo: afastamento.motivo,
+            dias: afastamento.dias,
+            codigo: `${afastamento.codigo} - ${model.codigos.filter((e)=>{return e.codigo == afastamento.codigo})[0].descricao}`,
+            pericia: afastamento.pericia,
+            parecer: afastamento.parecer,
+        }
+        dotPlot(plotData, '--');
+        const opt = {
+            filename: `afastamento_${afastamento.funcionario}.pdf`
+        }
+        html2pdf().set(opt).from(document.getElementById('print_container')).save().then(()=>{window.close()});
+    </script>
+</body>
+</html>

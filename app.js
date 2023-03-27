@@ -14,8 +14,8 @@ const dayWeeks = {0:'DOM', 1:'SEG', 2:'TER', 3:'QUA', 4:'QUI', 5:'SEX', 6:'SAB'}
 
 function afastamentosPendentes(){
     let pendentes = model.afastamentos.filter((e) => {
-        if(!e.retorno){return true}
-        return dateGTENow(e.retorno);
+        // if(!e.retorno){return true};return dateGTENow(e.retorno); // Antigo filtro, pegava pela data de retorno
+        if(e.pendente == 'Sim'){return true}
     })
     pendentes.sort((a,b) => (dateStrBr2GetTime(a.retorno) > dateStrBr2GetTime(b.retorno)) ? 1 : ((dateStrBr2GetTime(b.retorno) > dateStrBr2GetTime(a.retorno)) ? -1 : 0));
     let ul = document.getElementById('acompanhamento_list');

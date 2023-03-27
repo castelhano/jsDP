@@ -75,6 +75,7 @@ div.btn-light:hover{background-color: #d3d4d5;}
 
 .text-orange{color: #FF5722!important;}
 .text-purple{color: #6f42c1!important;}
+[data-bs-theme="dark"] .text-purple{color: #F2A2E8!important;}
 .text-hover-orange:hover{color: #FF5722!important;}
 .text-hover-purple:hover{color: #6f42c1!important;}
 
@@ -137,7 +138,7 @@ div.btn-light:hover{background-color: #d3d4d5;}
 .placeholder-end::placeholder {text-align: right;font-weight: bold;color: #999;}
 
 .callout{border: 1px solid #e9ecef;border-left-width: .25rem;border-radius: .25rem;}
-[data-bs-theme="dark"] .callout{background-color: #393939}
+[data-bs-theme="dark"] .callout{background-color: #393939; border-color: rgba(255,255,255,0.15);}
 /* [data-bs-theme="dark"] .callout, */
 /* [data-bs-theme="dark"] .form-control, [data-bs-theme="dark"] .form-select
 {background-color: #3d3d3d;border-color: #3d3d3d; color: #F1F1F1;}

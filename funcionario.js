@@ -16,6 +16,7 @@ function guiFuncionarios(funcionario=null){
     guiClear();
     model_label.innerHTML = 'Funcionario';
     guiBuildFormFuncionario();
+    dateInputExtra_start();
     if(funcionario){ // Caso chamada de funcao forneca dados do funcionario, pre carrega dados
         formLoad(funcionario);
     }
@@ -28,6 +29,7 @@ function guiFuncionarios(funcionario=null){
         }
         else{
             funcionarioFormClean();
+            document.getElementById('id_admissao').value = dotToday(0,0,0,true);
         }   
         submit_btn.onclick = () => {
             let form = formToDict();
