@@ -14,6 +14,7 @@ function guiCargos(){
         container: main_container,
         data: model.cargos,
         canFilter: true,
+        enablePaginate: true,
         filterCols: ['nome']
     });
     addControls([{classList:'btn btn-sm btn-dark',innerHTML:'<i class="fas fa-pen"></i>',action:'guiCargoId(this)'}]);
