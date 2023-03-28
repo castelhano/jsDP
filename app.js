@@ -15,10 +15,10 @@ const dayWeeks = {0:'DOM', 1:'SEG', 2:'TER', 3:'QUA', 4:'QUI', 5:'SEX', 6:'SAB'}
 function afastamentosPendentes(){
     let pendentes = model.afastamentos.filter((e) => {
         // if(!e.retorno){return true};return dateGTENow(e.retorno); // Antigo filtro, pegava pela data de retorno
-        if(e.pendente == 'Sim'){return true}
+        if(e.pendente == 'Retorno'){return true}
     })
     pendentes.sort((a,b) => (dateStrBr2GetTime(a.retorno) > dateStrBr2GetTime(b.retorno)) ? 1 : ((dateStrBr2GetTime(b.retorno) > dateStrBr2GetTime(a.retorno)) ? -1 : 0));
-    let ul = document.getElementById('acompanhamento_list');
+    let retornos = document.getElementById('retornos_list');
     for(i in pendentes){
         let li = document.createElement('li');li.classList = 'd-flex justify-content-between';
         if(pendentes[i].retorno){
@@ -27,10 +27,29 @@ function afastamentosPendentes(){
         else{
             li.innerHTML = `<span>--/--/---- --- <a href="#"><b>${pendentes[i].funcionario}</b> - ${model.funcionarios.filter((e)=>{return e.matricula == pendentes[i].funcionario})[0].nome}</a></span><small class="text-purple">--</small>`
         }
-        ul.appendChild(li)
+        retornos.appendChild(li)
     }
-    if(ul.childNodes.length == 0){
-        ul.innerHTML = '<li>Nenhum retorno agendado...<li>';
+    if(retornos.childNodes.length == 0){
+        retornos.innerHTML = '<li>Nenhum retorno agendado<li>';
+    }
+    // ******************
+    let decisoes = model.afastamentos.filter((e) => {
+        if(e.pendente == 'Decisao'){return true}
+    })
+    decisoes.sort((a,b) => (dateStrBr2GetTime(a.retorno) > dateStrBr2GetTime(b.retorno)) ? 1 : ((dateStrBr2GetTime(b.retorno) > dateStrBr2GetTime(a.retorno)) ? -1 : 0));
+    let decisao = document.getElementById('decisao_list');
+    for(i in decisoes){
+        let li = document.createElement('li');li.classList = 'd-flex justify-content-between';
+        if(decisoes[i].retorno){
+            li.innerHTML = `<span>${decisoes[i].retorno} ${dateGetDayWeek(decisoes[i].retorno)} <span class="btn btn-link p-0 text-decoration-none" onclick="guiAfastamentoId(null, ${decisoes[i].id})"><b>${decisoes[i].funcionario}</b> - ${model.funcionarios.filter((e)=>{return e.matricula == decisoes[i].funcionario})[0].nome}</span></span><small class="text-purple">${dataGetDaysFromNow(decisoes[i].retorno)}</small>`
+        }
+        else{
+            li.innerHTML = `<span>--/--/---- --- <a href="#"><b>${decisoes[i].funcionario}</b> - ${model.funcionarios.filter((e)=>{return e.matricula == decisoes[i].funcionario})[0].nome}</a></span><small class="text-purple">--</small>`
+        }
+        decisao.appendChild(li)
+    }
+    if(decisao.childNodes.length == 0){
+        decisao.innerHTML = '<li>Nenhum aguardando decisão<li>';
     }
 }
 
