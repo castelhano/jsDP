@@ -124,7 +124,7 @@ function addControls(btns){
     main_table.thead.querySelector('tr').appendChild(th);
     let td_content = '';
     for(let i in btns){
-        td_content += `<button class="${btns[i].classList}" onclick="${btns[i].action}">${btns[i].innerHTML}</button>`
+        td_content += `<button class="${btns[i].classList}" onclick="${btns[i].action}" title="${btns[i]?.alt || ''}">${btns[i].innerHTML}</button>`
     }
     main_table.tbody.querySelectorAll('tr').forEach((el) => {
         let td = document.createElement('td');td.classList = 'text-end py-1';td.innerHTML = td_content;

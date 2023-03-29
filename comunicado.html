@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./static/css/vendor/bootstrap.min.css">
+    <link rel="stylesheet" href="./static/css/dot.css">
+    <title>Document</title>
+    <script>
+        var STATIC_THEME = true;
+    </script>
+</head>
+<body >
+    <div id="anexos" class="p-5">
+        <h4 class="text-center mb-2">ANEXO 1</h4>
+        <h5 class="text-center mt-3 mb-4">COMUNICADO DEPARTAMENTO PESSOAL</h5>
+
+        <P class="my-5">Ao Senhor(a): <b data-itKey="nome"></b> - <b data-itKey="matricula"></b></P>
+        <p class="my-3">Em atendimento ao PCMSO - Programa de Controle Médico de Saúde Ocupacional, vimos comunicar que V. Sa. deverá comparecer a UMA para o exame médico de retorno ao trabalho no dia anterior à data de seu retorno.</p>
+        <p class="my-5">Segue em mãos o resultado do ASO (Atestado de Saúde Ocupacional) para seu conhecimento.</p>
+
+        <b class="my-5">Cuiabá, <span data-itKey="hoje"></span></b>
+
+        <p class="my-5">ASO - Recebido Dpto Pessoal:</p><br><br><br>
+        <div class="row">
+            <div class="col-auto mx-auto border-top border-dark px-5 fw-bold">Jéssika Santiago Alves</div>
+            <div class="col-12 text-center fw-bold">Departamento Pessoal</div>
+        </div>
+
+        <br><br><br><br>
+        <p class="my-5">Recebi este comunicado em: <b>Cuiabá, <span data-itKey="hoje"></span></b></p>
+        <div class="row">
+            <div class="col-auto border-top border-dark fw-bold mt-4 px-5 mx-auto" data-itKey="nome"></div>
+        </div>
+
+        <br class="html2pdf__page-break">
+
+
+        <h4 class="text-center mt-5 mb-2">ANEXO 2</h4>
+        <h5 class="text-center mt-3 mb-4">ENCAMINHAMENTO PARA SETOR DE RH</h5>
+
+        <P class="my-5">Ao Senhor(a): <b data-itKey="nome"></b> - <b data-itKey="matricula"></b></P>
+        <p class="my-3">Em atendimento ao Procedimento do Retorno ao Trabalho após afastamento, encaminhamos o funcionário acima especificado para entrevista de Retorno e demais providências necessárias ao seu retorno.</p>
+        <p class="my-4">Informamos verificando meses de Férias meses vencidos.</p>
+        <p class="my-4">Segue em mãos o resultado do ASO (Atestado de Saúde Ocupacional) para seu conhecimento.</p>
+        
+        <p class="mt-5 mb-0">Periodo de afastamento: <b data-itKey="inicio"></b> a <b data-itKey="retorno"></b></p>
+        <b data-itKey="motivo"></b><br><br><br><br>
+
+
+        <div class="row">
+            <div class="col-auto mx-auto border-top border-dark px-5 fw-bold">Jéssika Santiago Alves</div>
+            <div class="col-12 text-center fw-bold">Departamento Pessoal</div>
+        </div>
+
+        <br><br><br><br>
+        <p class="my-5">Recebi este comunicado em: <b>Cuiabá, <span data-itKey="hoje"></span></b></p>
+        <div class="row">
+            <div class="col-auto border-top fw-bold mt-4 px-3 mx-auto"><span data-itKey="nome"></span> - <span data-itKey="matricula"></span></div>
+        </div>
+    </div>
+
+    <script src="./static/js/vendor/jsPDF.js"></script>
+    <script src="./static/js/dot.js"></script>
+    <script src="./static/js/interpolate.js"></script>
+    <script src="./static/js/url.js"></script>
+    <script>
+        let model = JSON.parse(localStorage.model);
+        let id = urlGet('id');
+        const afastamento = model.afastamentos.filter((e)=>{ return e.id == id})[0];
+        const funcionario = model.funcionarios.filter((e)=>{return e.matricula == afastamento.funcionario})[0];
+        const codigo = model.codigos.filter((e)=>{return e.codigo == afastamento.codigo})[0];
+        let plotData = {
+            matricula: afastamento.funcionario,
+            nome: funcionario.nome,
+            inicio: afastamento.inicio,
+            retorno: afastamento.retorno,
+            motivo: codigo.descricao,
+            hoje: dotToday()
+        }
+        dotPlot(plotData, '--');
+        html2pdf().set({filename: `anexos_${afastamento.funcionario}.pdf`}).from(document.getElementById('anexos')).save().then(()=>{window.close()});
+    </script>
+</body>
+</html>

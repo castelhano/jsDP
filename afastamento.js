@@ -29,8 +29,9 @@ function guiAfastamentos(){
     });
     if(main_table.raw.length > 0){
         addControls([
-            {classList:'btn btn-sm btn-dark',innerHTML:'<i class="fas fa-pen"></i>',action:'guiAfastamentoId(this)'},
-            {classList:'btn btn-sm btn-warning ms-1',innerHTML:'<i class="fas fa-print"></i>', action:'afastamentoCapa(this)'}
+            {classList:'btn btn-sm btn-dark',innerHTML:'<i class="fas fa-pen"></i>',action:'guiAfastamentoId(this)', alt: 'Editar afastamento'},
+            {classList:'btn btn-sm btn-warning ms-1',innerHTML:'<i class="fas fa-print"></i>', action:'afastamentoCapa(this)', alt: 'Relatorio de afastamento'},
+            {classList:'btn btn-sm btn-warning ms-1',innerHTML:'<i class="fas fa-sticky-note"></i>', action:'afastamentoCapa(this, 2)', alt: 'Comunicado de afastamento'}
         ])
     }
     model_label.innerHTML = 'Afastamento';
@@ -229,8 +230,11 @@ function guiCodigosAfastamento(){
     submit_btn.onclick = () => {main_table.saveBtn.click()}
 }
 
-function afastamentoCapa(btn){
+function afastamentoCapa(btn, mod=1){
     let id = btn.parentNode.parentNode.firstChild.innerText;
-    // modelSave();
-    window.open(`./print.html?id=${id}`, '_blank', 'model=[foo]');
+    if(mod == 1){window.open(`./capa.html?id=${id}`, '_blank')}
+    else if(mod == 2){window.open(`./comunicado.html?id=${id}`, '_blank')}
+    else{
+        dotNotify('danger', `<b>Erro:</b> Operação inválida - Mod:${mod}`);
+    }
 }
